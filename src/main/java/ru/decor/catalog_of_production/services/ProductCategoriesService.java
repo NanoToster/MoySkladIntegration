@@ -1,14 +1,16 @@
 package ru.decor.catalog_of_production.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.decor.catalog_of_production.domain.product_categories.MoySkladCategory;
 import ru.decor.catalog_of_production.domain.product_categories.ProductCategoriesResponse;
+import ru.decor.catalog_of_production.domain.users.User;
+import ru.decor.catalog_of_production.repositories.UserRepository;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -20,6 +22,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ProductCategoriesService {
     private String userName;
     private String userPassword;
+    private ObjectMapper objectMapper;
+
+    private UserRepository userRepository;
 
     @Value("${moysclad.user.login}")
     public void setUserName(String userName) {
@@ -31,6 +36,16 @@ public class ProductCategoriesService {
         this.userPassword = userPassword;
     }
 
+    @Autowired
+    public void setObjectMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     public void getAllCategories() {
         final String url = "https://online.moysklad.ru/api/remap/1.1/entity/productfolder?Content-Type=application/json";
         final RestTemplate re = new RestTemplateBuilder().basicAuthentication(userName, userPassword).build();
@@ -39,13 +54,15 @@ public class ProductCategoriesService {
         checkNotNull(allCategoriesString, "null response string from server");
 
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             final ProductCategoriesResponse productCategoriesResponse = objectMapper.readValue(allCategoriesString, ProductCategoriesResponse.class);
             System.out.println("null");
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+
+        final User byId = userRepository.findByUserId(6);
+        System.out.println("lol");
+
     }
 
     public void getEvroplastCategoryTree() {
@@ -59,7 +76,6 @@ public class ProductCategoriesService {
         System.out.println(evroplastCategoryString);
 
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
             final MoySkladCategory productCategoriesResponse = objectMapper.readValue(evroplastCategoryString, MoySkladCategory.class);
             System.out.println("null");
         } catch (JsonProcessingException e) {

@@ -20,4 +20,4 @@ To compile front-end use one of next commands:
 1) npm run build - for 1 time build
 2) npm run dev - for continuous build (not working for me)
 
-For correct work of application you should add <b>application.properties</b> file with values actual for you. I will add template file ASAP.
+For correct work of application you should add <b>application.properties</b> file from <b>application_template.properties</b> with values actual for you.
