@@ -1,4 +1,6 @@
-<h1>Single page application for integration with MoySklad SaaS system</h1>
+<h1>This project closed</h1>
+
+<h3>Single page application for integration with MoySklad SaaS system</h3>
 
 <b>Purpose</b> - give third parties the ability to access some system information without providing full access to the internal system.
 
@@ -14,7 +16,7 @@ Back-end:
 Front-end:
 1) React
 
-<h1>For start</h1>
+<h3>For start</h3>
 To compile front-end use one of next commands:
 
 1) npm run build - for 1 time build
